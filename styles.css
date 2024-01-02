@@ -9,56 +9,49 @@ html {
   box-sizing: inherit;
 }
 
-:root {
-  --body-bg-color: #e5dede;
-  --tiles-bg-color: rgba(255, 255, 255, 0.8);
-  --tiles-bg-color-hover: rgba(230, 230, 230, 0.8);;
-  --tiles-blue-bg-color: #6e79db;
-  --tiles-red-bg-color: #ea5c5c;
-  --cell-size: 10rem;
-  --cell-spacing: 1rem;
-  --title-height: 3rem;
-  --reset-height: 5rem;
-}
-
-
 body {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   padding: 0;
-  padding-top: 10rem;
   margin: 0 auto;
-  background-image: url(./Images/background.png);
+  background-image: url(./Images/background2.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.game {
   display: grid;
-  grid-template-columns: var(--cell-size) var(--cell-size) var(--cell-size);
-  grid-template-rows: var(--reset-height) var(--cell-size) var(--cell-size) var(--cell-size) var(--reset-height);
-  grid-gap: var(--cell-spacing);
-  justify-content: center;
+  grid-template-columns: repeat(3, 1fr); /* Make the columns adjust to available space */
+  grid-template-rows: repeat(3, 1fr) 5rem;
+  grid-gap: 0.5rem;
   align-content: center;
+  margin: 0 auto;
 }
 
 .title {
   font-family: 'Montserrat', sans-serif;
-  font-size: 3rem;
+  font-size: 5rem;
   text-align: center;
   width: 100%;
-  height: var(--title-height);
-  line-height: var(--title-height);
-  grid-column-start: 1;
-  grid-column-end: 4;
-  color: #fff;
+  color: #FF6F61;
   font-weight: 700;
+  text-shadow: 6px 6px 8px rgba(2, 2, 2, 0.5);
+  margin-top: 25rem;
 }
 
 .but {
   font-family: 'Open Sans', sans-serif;
   font-size: 2rem;
-  background-color: var(--tiles-bg-color);
-  width: var(--cell-size);
-  height: var(--cell-size);
+  background-color: rgba(255, 255, 255, 0.8);
+  width: 100%;
+  padding-top: 100%;
+  min-width: 5rem; /* Minimum width for the cells */
+  min-height: 5rem; /* Minimum height for the cells */
   border: none;
   display: block;
   cursor: pointer;
@@ -74,33 +67,70 @@ body {
 }
 
 .but:hover {
-  background-color: var(--tiles-bg-color-hover);
+  background-color: rgba(230, 230, 230, 0.8);
 }
 
 .but.blue:after {
   content: '✕';
-  color: var(--tiles-blue-bg-color);
+  color: #6e79db;
   font-size: 7rem;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  line-height: var(--cell-size);
-  display: block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .but.red:after {
   content: '〇';
-  color: var(--tiles-red-bg-color);
+  color: #ea5c5c;
   font-size: 7rem;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  line-height: var(--cell-size);
-  display: block;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.but:after {
+  font-size: 3rem; 
 }
 
 #reset {
   width: 100%;
-  height: var(--reset-height);
+  height: 5rem;
   grid-column-start: 1;
   grid-column-end: 4;
 }
 
+@media screen and (max-width: 350px) {
+  body {
+    justify-content: center;
+    align-content: center;
+  }
+
+  .title {
+    margin-top: 0;
+  }
+  
+  .game {
+    grid-template-columns: repeat(3, 5rem);
+    grid-template-rows: repeat(3, 5rem) 5rem;
+    grid-gap: 0.5rem;
+  }
+
+  .but {
+    padding-top: 2rem;
+    min-width: 5rem;
+    min-height: 5rem;
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (min-width: 351px) {
+  .but {
+    min-width: 7rem; 
+    min-height: 7rem; 
+    font-size: 2rem;
+  }
+}

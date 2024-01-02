@@ -72,45 +72,45 @@ class Tic {
     
     computerMove() {
       var patternResult = this.confirmPattern(1, true);
-      
+    
       if (!patternResult) {
         var isNext = true;
-  
+    
         while (isNext) {
           var random = Math.floor(Math.random() * 9);
-          
+    
           if (this.storage[random] === 0) {
             this.storage[random] = this.play;
-  
+    
             isNext = false;
-            
+    
             this.buildTable();
             this.play = 1;
-          }
-          else {
+          } else {
             for (var i in this.storage) {
               isNext = false;
-  
+    
               if (this.storage[i] === 0) {
                 isNext = true;
-  
+    
                 break;
               }
             }
           }
         }
-      }
-      else {
+      } else {
         for (var i in patternResult) {
           if (this.storage[patternResult[i]] === 0) {
             this.storage[patternResult[i]] = this.play;
-      
+    
             this.buildTable();
             this.play = 1;
+            return; // Exit the loop after making a move
           }
         }
       }
     }
+    
     
     buildTable() {
       var tic          = this;
