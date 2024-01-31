@@ -111,6 +111,12 @@ footer {
   font-weight: 600;
 }
 
+.winning-cell {
+  background-color: yellow; 
+  color: black; 
+}
+
+
 @media screen and (max-width: 350px) {
   body {
     justify-content: center;

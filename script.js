@@ -113,8 +113,8 @@ class Tic {
     
     
     buildTable() {
-      var tic          = this;
-      var countStorage = 0;
+      const tic = this;
+      let countStorage = 0;
       
       for (var i in this.storage) {
         if (this.storage[i] == 0) {
@@ -122,28 +122,25 @@ class Tic {
         }
       }
   
-      Array.prototype.forEach.call(this.button, function(btn, i) {
+      Array.prototype.forEach.call(this.button, function (btn, i) {
         btn.classList.remove('blue');
         btn.classList.remove('red');
+        btn.classList.remove('winning-cell'); // Remove the "winning-cell" class from all cells
   
-        switch(tic.storage[i]) {
+        switch (tic.storage[i]) {
           case 1:
             btn.classList.add('blue');
-            
             break;
           case 2:
             btn.classList.add('red');
-            
             break;
         }
       });
   
       if (this.play === 0) {
         this.play = 1;
-      }
-      else if (this.play === 1) {
+      } else if (this.play === 1) {
         this.play = 2;
-        
         tic.computerMove();
       }
   
@@ -151,15 +148,31 @@ class Tic {
       tic.getWin(2, tic.confirmPattern(2, false));
   
       if (!!this.winPlay) {
-        if (confirm('PLAYER ' + this.winPlay + ' WINS! Play again?')) {
-          this.buildStorage();
-          this.reset();
+        const winningCells = this.confirmPattern(this.winPlay, false); // Get the winning cells
+  
+        if (winningCells) {
+          winningCells.forEach((cellIndex) => {
+            // Highlight the winning cells by adding the "winning-cell" class
+            tic.button[cellIndex].classList.add('winning-cell');
+          });
         }
-      }
-      else if (countStorage == 0) {
-        if (confirm('It\'s a draw! Do you like to try again?')) {
-          this.reset();
-        }
+  
+        // Delay the popup window with a setTimeout
+        setTimeout(() => {
+          if (confirm('PLAYER ' + this.winPlay + ' WINS! Play again?')) {
+            // Reset the game
+            this.buildStorage();
+            this.reset();
+          }
+        }, 1000); // 1-second delay
+      } else if (countStorage == 0) {
+        // Draw
+        setTimeout(() => {
+          if (confirm('It\'s a draw! Do you want to try again?')) {
+            // Reset the game
+            this.reset();
+          }
+        }, 1000); // 1-second delay
       }
     }
     
