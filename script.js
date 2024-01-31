@@ -71,110 +71,122 @@ class Tic {
     }
     
     computerMove() {
-      var patternResult = this.confirmPattern(1, true);
-    
-      if (!patternResult) {
-        var isNext = true;
-    
-        while (isNext) {
-          var random = Math.floor(Math.random() * 9);
-    
-          if (this.storage[random] === 0) {
-            this.storage[random] = this.play;
-    
-            isNext = false;
-    
-            this.buildTable();
-            this.play = 1;
-          } else {
-            for (var i in this.storage) {
-              isNext = false;
-    
-              if (this.storage[i] === 0) {
-                isNext = true;
-    
-                break;
-              }
-            }
-          }
-        }
-      } else {
-        for (var i in patternResult) {
-          if (this.storage[patternResult[i]] === 0) {
-            this.storage[patternResult[i]] = this.play;
-    
-            this.buildTable();
-            this.play = 1;
-            return; // Exit the loop after making a move
-          }
-        }
-      }
-    }
-    
-    
-    buildTable() {
-      const tic = this;
-      let countStorage = 0;
-      
-      for (var i in this.storage) {
-        if (this.storage[i] == 0) {
-          countStorage++;
-        }
-      }
-  
-      Array.prototype.forEach.call(this.button, function (btn, i) {
-        btn.classList.remove('blue');
-        btn.classList.remove('red');
-        btn.classList.remove('winning-cell'); // Remove the "winning-cell" class from all cells
-  
-        switch (tic.storage[i]) {
-          case 1:
-            btn.classList.add('blue');
-            break;
-          case 2:
-            btn.classList.add('red');
-            break;
-        }
-      });
-  
-      if (this.play === 0) {
+  if (this.winPlay) {
+    return; // Don't make any moves if the game has already ended
+  }
+
+  var patternResult = this.confirmPattern(1, true);
+
+  if (!patternResult) {
+    var isNext = true;
+
+    while (isNext) {
+      var random = Math.floor(Math.random() * 9);
+
+      if (this.storage[random] === 0) {
+        this.storage[random] = this.play;
+
+        isNext = false;
+
+        this.buildTable();
         this.play = 1;
-      } else if (this.play === 1) {
-        this.play = 2;
-        tic.computerMove();
-      }
-  
-      tic.getWin(1, tic.confirmPattern(1, false));
-      tic.getWin(2, tic.confirmPattern(2, false));
-  
-      if (!!this.winPlay) {
-        const winningCells = this.confirmPattern(this.winPlay, false); // Get the winning cells
-  
-        if (winningCells) {
-          winningCells.forEach((cellIndex) => {
-            // Highlight the winning cells by adding the "winning-cell" class
-            tic.button[cellIndex].classList.add('winning-cell');
-          });
+      } else {
+        for (var i in this.storage) {
+          isNext = false;
+
+          if (this.storage[i] === 0) {
+            isNext = true;
+
+            break;
+          }
         }
-  
-        // Delay the popup window with a setTimeout
-        setTimeout(() => {
-          if (confirm('PLAYER ' + this.winPlay + ' WINS! Play again?')) {
-            // Reset the game
-            this.buildStorage();
-            this.reset();
-          }
-        }, 1000); // 1-second delay
-      } else if (countStorage == 0) {
-        // Draw
-        setTimeout(() => {
-          if (confirm('It\'s a draw! Do you want to try again?')) {
-            // Reset the game
-            this.reset();
-          }
-        }, 1000); // 1-second delay
       }
     }
+  } else {
+    for (var i in patternResult) {
+      if (this.storage[patternResult[i]] === 0) {
+        this.storage[patternResult[i]] = this.play;
+
+        this.buildTable();
+        this.play = 1;
+        return; // Exit the loop after making a move
+      }
+    }
+  }
+}
+    
+    
+buildTable() {
+  const tic = this;
+  let countStorage = 0;
+  
+  for (var i in this.storage) {
+    if (this.storage[i] == 0) {
+      countStorage++;
+    }
+  }
+
+  Array.prototype.forEach.call(this.button, function (btn, i) {
+    btn.classList.remove('blue');
+    btn.classList.remove('red');
+    btn.classList.remove('winning-cell'); // Remove the "winning-cell" class from all cells
+
+    switch (tic.storage[i]) {
+      case 1:
+        btn.classList.add('blue');
+        break;
+      case 2:
+        btn.classList.add('red');
+        break;
+    }
+  });
+
+  if (this.play === 0) {
+    this.play = 1;
+  } else if (this.play === 1) {
+    this.play = 2;
+    tic.computerMove();
+  }
+
+  // Call getWin only once for each player
+  if (this.play === 1) {
+    tic.getWin(1, tic.confirmPattern(1, false));
+  } else {
+    tic.getWin(2, tic.confirmPattern(2, false));
+  }
+
+  if (!!this.winPlay) {
+    const winningCells = this.confirmPattern(this.winPlay, false); // Get the winning cells
+
+    if (winningCells) {
+      winningCells.forEach((cellIndex) => {
+        // Highlight the winning cells by adding the "winning-cell" class
+        tic.button[cellIndex].classList.add('winning-cell');
+      });
+    }
+
+    // Set the flag to prevent multiple pop-ups
+    this.popupDisplayed = true;
+
+    // Delay the popup window with a setTimeout
+    setTimeout(() => {
+      if (confirm(this.winPlay === 1 ? 'Human WINS! Play again?' : 'AI WINS! Play again?')) {
+        // Reset the game
+        this.buildStorage();
+        this.reset();
+      }
+    }, 1000); // 1-second delay
+  } else if (countStorage == 0) {
+    // Draw
+    setTimeout(() => {
+      if (confirm('It\'s a draw! Do you want to try again?')) {
+        // Reset the game
+        this.reset();
+      }
+    }, 1000); // 1-second delay
+  }
+}
+
     
     main() {
       this.buildPattern();
